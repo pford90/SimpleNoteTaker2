@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">SimpleNoteTaker</string>
+    <string name="add_note">Add Note</string>
+    <string name="title">Title</string>
+    <string name="modified_date_newest_first">Modified Date ( newest first )</string>
+    <string name="sort">Sort</string>
+    <string name="search">Search</string>
+    <string name="open_drawer">Open Drawer</string>
+    <string name="close_drawer">Close Drawer</string>
+</resources>

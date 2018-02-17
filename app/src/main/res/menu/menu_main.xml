@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/menu_search" android:title="@string/search" android:icon="@drawable/ic_search_24dp" app:showAsAction="ifRoom" android:orderInCategory="1"/>
+    <item android:title="@string/sort" android:icon="@drawable/ic_sort_24dp" android:orderInCategory="2" app:showAsAction="ifRoom">
+        <menu>
+            <item android:title="Title"></item>
+        </menu>
+    </item>
+
+    <item android:id="@+id/menu_add" android:title="@string/add_note" android:icon="@drawable/ic_add_24dp" app:showAsAction="ifRoom" android:orderInCategory="3"/>
+
+</menu>
