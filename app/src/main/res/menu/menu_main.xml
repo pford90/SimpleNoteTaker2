@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/menu_search" android:title="@string/search" android:icon="@drawable/ic_search_24dp" app:showAsAction="ifRoom" android:orderInCategory="1"/>
-    <item android:title="@string/sort" android:icon="@drawable/ic_sort_24dp" android:orderInCategory="2" app:showAsAction="ifRoom">
+    <item android:title="@string/sort" android:icon="@drawable/ic_sort_24dp" android:orderInCategory="2" app:showAsAction="always">
         <menu>
-            <item android:title="Title"></item>
+            <group android:id="@+id/menu_sort_group" android:checkableBehavior="single">
+                <item android:id="@+id/title_sort" android:title="@string/title" android:checkable="true"/>
+                <item android:id="@+id/modified_date_asc" android:title="@string/modified_date_newest_first" android:checkable="true"/>
+            </group>
         </menu>
     </item>
 
