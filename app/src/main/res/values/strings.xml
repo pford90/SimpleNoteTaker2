@@ -8,4 +8,5 @@
     <string name="open_drawer">Open Drawer</string>
     <string name="close_drawer">Close Drawer</string>
     <string name="title">Title</string>
+    <string name="preferences">.preferences</string>
 </resources>
