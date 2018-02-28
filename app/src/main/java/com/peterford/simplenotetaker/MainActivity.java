@@ -1,45 +1,34 @@
 package com.peterford.simplenotetaker;
 
 import android.content.Intent;
-import android.graphics.Color;
+
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.peterford.simplenotetaker.decoration.VerticalSpacingDecoration;
 import com.peterford.simplenotetaker.listener.*;
 import com.peterford.simplenotetaker.listener.RecyclerViewClickListener;
 import com.peterford.simplenotetaker.model.Note;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.internal.Utils;
-
-import static android.widget.LinearLayout.HORIZONTAL;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.navigation_view) NavigationView mNavigationView;
     @BindView(R.id.main_recyclerView_notes) RecyclerView mRecyclerView;
 
+    @BindView(R.id.main_slidingPanel) SlidingUpPanelLayout mSlidingUpPanelLayout;
     private Note[] mNotes;
 
     @Override
@@ -75,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.addItemDecoration( new com.peterford.simplenotetaker.decoration.DividerItemDecoration(this));
         mRecyclerView.addItemDecoration( new VerticalSpacingDecoration(24));
 
+        mSlidingUpPanelLayout.setEnabled(true);
+//        mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
     }
 
     @Override
@@ -91,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         switch (id) {
             case R.id.menu_search:
                 result = "Search";
+                mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
                 break;
             case R.id.title_sort:
                 result = "Title Sort";
