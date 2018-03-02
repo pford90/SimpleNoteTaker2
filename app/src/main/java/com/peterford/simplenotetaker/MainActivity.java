@@ -33,8 +33,8 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.main_toolbar) Toolbar mToolbar;
-    @BindView(R.id.main_drawer_layout) DrawerLayout mDrawerLayout;
-    @BindView(R.id.navigation_view) NavigationView mNavigationView;
+//    @BindView(R.id.main_drawer_layout) DrawerLayout mDrawerLayout;
+//    @BindView(R.id.navigation_view) NavigationView mNavigationView;
     @BindView(R.id.main_recyclerView_notes) RecyclerView mRecyclerView;
 
     @BindView(R.id.main_slidingPanel) SlidingUpPanelLayout mSlidingUpPanelLayout;
@@ -43,14 +43,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.navigation_drawer);
+//        setContentView(R.layout.navigation_drawer);
+        setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
 
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer);
-        mDrawerLayout.setDrawerListener(drawerToggle);
+//        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer);
+//        mDrawerLayout.setDrawerListener(drawerToggle);
 
-        drawerToggle.syncState();
+//        drawerToggle.syncState();
         loadNotes();
 
         Log.i("MAINACTIVITY", String.valueOf(mNotes.length));

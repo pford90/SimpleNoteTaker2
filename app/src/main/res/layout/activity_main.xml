@@ -43,15 +43,15 @@
         android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.25"
+        android:layout_weight="0.40"
         android:gravity="center|top"
-        android:weightSum="100">
+        android:weightSum="60">
 
         <!-- FIRST ROW OF NAV ITEMS -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="50"
+            android:layout_weight="20"
             android:orientation="horizontal"
             android:weightSum="3">
 
@@ -73,11 +73,12 @@
         </LinearLayout>
         <!-- END OF FIRST ROW OF NAV ITEMS -->
 
+        <!-- START OF SECOND ROW -->
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="50"
+            android:layout_weight="20"
             android:weightSum="3">
             <ImageView
                 android:layout_width="0dp"
@@ -95,6 +96,26 @@
                 android:layout_weight="1"
                 android:src="@drawable/ic_redo_24dp"/>
         </LinearLayout>
+        <!-- END OF SECOND ROW OF NAV ITEMS -->
+        <!-- START OF THIRD ROW -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="20"
+            android:weightSum="2">
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_redo_24dp"/>
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_redo_24dp"/>
+        </LinearLayout>
+    <!-- END OF THIRD ROW -->
 
     </LinearLayout>
         <!-- END SLIDING CONTENT -->
