@@ -7,10 +7,6 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Created by Peter on 2/18/2018.
- */
-
 public class Note implements Serializable {
     private String mTitle;
     private String mContent;

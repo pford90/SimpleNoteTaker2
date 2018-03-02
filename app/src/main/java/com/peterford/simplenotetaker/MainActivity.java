@@ -15,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.peterford.simplenotetaker.comparators.NoteCreatedDateDescComparator;
+import com.peterford.simplenotetaker.comparators.NoteTitleDescComparator;
 import com.peterford.simplenotetaker.decoration.VerticalSpacingDecoration;
 import com.peterford.simplenotetaker.listener.*;
 import com.peterford.simplenotetaker.listener.RecyclerViewClickListener;
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.main_recyclerView_notes) RecyclerView mRecyclerView;
 
     @BindView(R.id.main_slidingPanel) SlidingUpPanelLayout mSlidingUpPanelLayout;
-    private Note[] mNotes;
+    private ArrayList<Note> mNotes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
 //        drawerToggle.syncState();
         loadNotes();
-
-        Log.i("MAINACTIVITY", String.valueOf(mNotes.length));
 
         mRecyclerView.addOnItemTouchListener( new RecyclerViewClickListener(this, mRecyclerView,
                         new NoteItemListener(), Arrays.asList(mNotes)) );
@@ -90,10 +90,20 @@ public class MainActivity extends AppCompatActivity {
             case R.id.title_sort:
                 result = "Title Sort";
                 toggleMenuItems(item);
+                mNotes.sort(new NoteTitleDescComparator());
+                mRecyclerView.getAdapter().notifyDataSetChanged();
                 break;
             case R.id.modified_date_asc:
                 result = "Modified Date";
                 toggleMenuItems(item);
+                mNotes.sort(new NoteCreatedDateDescComparator(NoteCreatedDateDescComparator.SortType.ASC));
+                mRecyclerView.getAdapter().notifyDataSetChanged();
+                break;
+            case R.id.modified_date_desc:
+                result = "Modified Date";
+                toggleMenuItems(item);
+                mNotes.sort(new NoteCreatedDateDescComparator(NoteCreatedDateDescComparator.SortType.DESC));
+                mRecyclerView.getAdapter().notifyDataSetChanged();
                 break;
             case R.id.menu_add:
                 result = "Add";
@@ -125,7 +135,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if(notes_l.size() > 0) {
-            mNotes = notes_l.toArray(new Note[notes_l.size()]);
+//            mNotes = notes_l.toArray(new Note[notes_l.size()]);
+            mNotes = notes_l;
         }
     }
 

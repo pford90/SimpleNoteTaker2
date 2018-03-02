@@ -19,6 +19,8 @@ import com.peterford.simplenotetaker.model.Note;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -26,10 +28,10 @@ import butterknife.OnClick;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder>{
 
-    private Note[] mNotes;
+    private ArrayList<Note> mNotes;
     private Context mContext;
 
-    public NoteAdapter(Context context, Note[] notes) {
+    public NoteAdapter(Context context, ArrayList<Note> notes) {
         mContext = context;
         mNotes = notes;
     }
@@ -44,12 +46,12 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     @Override
     public void onBindViewHolder(NoteViewHolder holder, int position) {
 
-        holder.bindNote(mNotes[position]);
+        holder.bindNote( mNotes.get(position) );
     }
 
     @Override
     public int getItemCount() {
-        return mNotes.length;
+        return mNotes.size();
     }
 
 
