@@ -2,17 +2,14 @@ package com.peterford.simplenotetaker;
 
 import android.content.Intent;
 
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.peterford.simplenotetaker.comparators.NoteCreatedDateDescComparator;
@@ -50,14 +47,10 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
 
-//        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer);
-//        mDrawerLayout.setDrawerListener(drawerToggle);
-
-//        drawerToggle.syncState();
         loadNotes();
 
-        mRecyclerView.addOnItemTouchListener( new RecyclerViewClickListener(this, mRecyclerView,
-                        new NoteItemListener(), Arrays.asList(mNotes)) );
+        mRecyclerView.addOnItemTouchListener( new RecyclerViewClickListener(this, mSlidingUpPanelLayout,
+                        new NoteItemListener(), mNotes) );
 
         NoteAdapter adapter = new NoteAdapter(this, mNotes);
         mRecyclerView.setAdapter(adapter);
@@ -67,8 +60,22 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.addItemDecoration( new VerticalSpacingDecoration(24));
 
         mSlidingUpPanelLayout.setEnabled(true);
-//        mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        mSlidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                if(previousState == SlidingUpPanelLayout.PanelState.EXPANDED)
+                {
+                    mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                }
+            }
+
+        });
     }
 
     @Override
@@ -115,7 +122,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-        Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+        if( !result.equalsIgnoreCase("search"))
+            Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
         return true;
     }
 
