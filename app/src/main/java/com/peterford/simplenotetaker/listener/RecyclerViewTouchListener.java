@@ -1,7 +1,6 @@
 package com.peterford.simplenotetaker.listener;
 
 import android.content.Context;
-import android.nfc.Tag;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -13,9 +12,9 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import java.util.List;
 
 
-public class RecyclerViewClickListener implements RecyclerView.OnItemTouchListener {
+public class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListener {
 
-    private final String TAG = RecyclerViewClickListener.class.getSimpleName();
+    private final String TAG = RecyclerViewTouchListener.class.getSimpleName();
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position, Object object);
@@ -29,7 +28,7 @@ public class RecyclerViewClickListener implements RecyclerView.OnItemTouchListen
     private SlidingUpPanelLayout mSlidingUpPanelLayout;
     private List<?> mObjects;
 
-    public RecyclerViewClickListener(Context context, RecyclerView recyclerView, SlidingUpPanelLayout slidingUpPanelLayout,OnItemClickListener listener, List<? extends Object> objects) {
+    public RecyclerViewTouchListener(Context context, RecyclerView recyclerView, SlidingUpPanelLayout slidingUpPanelLayout, OnItemClickListener listener, List<? extends Object> objects) {
         mListener = listener;
         mRecyclerView = recyclerView;
         mObjects = objects;

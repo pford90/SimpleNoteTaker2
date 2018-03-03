@@ -4,24 +4,16 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.peterford.simplenotetaker.NoteActivity;
 import com.peterford.simplenotetaker.model.Note;
 
-import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-/**
- * Created by Peter on 2/23/2018.
- */
-
-public class NoteItemListener implements RecyclerViewClickListener.OnItemClickListener {
+public class NoteItemListener implements RecyclerViewTouchListener.OnItemClickListener {
 
     private final String TAG = NoteItemListener.class.getSimpleName();
     private RecyclerView mRecyclerView;
@@ -60,8 +52,6 @@ public class NoteItemListener implements RecyclerViewClickListener.OnItemClickLi
                 } else {
                     Log.v(TAG, "CANT FIND NOTE");
                 }
-
-
             }
         });
         dialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -73,5 +63,4 @@ public class NoteItemListener implements RecyclerViewClickListener.OnItemClickLi
         AlertDialog dialog = dialogBuilder.create();
         dialog.show();
     }
-
 }
