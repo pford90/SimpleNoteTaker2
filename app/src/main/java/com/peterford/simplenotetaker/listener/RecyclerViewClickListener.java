@@ -20,21 +20,37 @@ public class RecyclerViewClickListener implements RecyclerView.OnItemTouchListen
     public interface OnItemClickListener {
         void onItemClick(View view, int position, Object object);
 
-        void onItemLongClick(View view);
+        void onItemLongClick(View view, int position, Object object);
     }
 
     private GestureDetector mGestureDetector;
     private OnItemClickListener mListener;
+    private RecyclerView mRecyclerView;
     private SlidingUpPanelLayout mSlidingUpPanelLayout;
     private List<?> mObjects;
 
-    public RecyclerViewClickListener(Context context, SlidingUpPanelLayout slidingUpPanelLayout,OnItemClickListener listener, List<? extends Object> objects) {
+    public RecyclerViewClickListener(Context context, RecyclerView recyclerView, SlidingUpPanelLayout slidingUpPanelLayout,OnItemClickListener listener, List<? extends Object> objects) {
         mListener = listener;
+        mRecyclerView = recyclerView;
         mObjects = objects;
         mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapUp(MotionEvent e) {
                 return true;
+            }
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+                Log.v(TAG, "INSIDE LONG PRESS");
+                View childView = mRecyclerView.findChildViewUnder(e.getX(), e.getY());
+
+                if( childView != null && mListener != null) {
+                    Log.v(TAG, "CHILD VIEW IS NOT NULL");
+                    int position = recyclerView.getChildAdapterPosition(childView);
+                    Log.v(TAG, "CHILD VIEW POSITION : " + position);
+                    mListener.onItemLongClick(childView, position, mObjects.get(position) );
+                }
+
             }
         });
         mSlidingUpPanelLayout = slidingUpPanelLayout;
@@ -57,6 +73,8 @@ public class RecyclerViewClickListener implements RecyclerView.OnItemTouchListen
             return false;
         }
     }
+
+
 
     @Override
     public void onTouchEvent(RecyclerView rv, MotionEvent e) {

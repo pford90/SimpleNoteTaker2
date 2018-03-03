@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
         loadNotes();
 
-        mRecyclerView.addOnItemTouchListener( new RecyclerViewClickListener(this, mSlidingUpPanelLayout,
-                        new NoteItemListener(), mNotes) );
+        mRecyclerView.addOnItemTouchListener( new RecyclerViewClickListener(this, mRecyclerView, mSlidingUpPanelLayout,
+                        new NoteItemListener(mRecyclerView, mNotes), mNotes) );
 
         NoteAdapter adapter = new NoteAdapter(this, mNotes);
         mRecyclerView.setAdapter(adapter);
