@@ -1,7 +1,6 @@
 package com.peterford.simplenotetaker;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
@@ -37,8 +36,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @BindView(R.id.main_toolbar) Toolbar mToolbar;
-//    @BindView(R.id.main_drawer_layout) DrawerLayout mDrawerLayout;
-//    @BindView(R.id.navigation_view) NavigationView mNavigationView;
     @BindView(R.id.main_recyclerView_notes) RecyclerView mRecyclerView;
 
     @BindView(R.id.main_slidingPanel) SlidingUpPanelLayout mSlidingUpPanelLayout;
@@ -47,10 +44,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.navigation_drawer);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
         setSupportActionBar(mToolbar);
+        mToolbar.setNavigationIcon(R.drawable.ic_nav);
+
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if( mSlidingUpPanelLayout.getPanelState() != SlidingUpPanelLayout.PanelState.EXPANDED)
+                    mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                else {
+                    mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                }
+            }
+        });
+
+
 
         loadNotes();
 
@@ -113,10 +124,6 @@ public class MainActivity extends AppCompatActivity {
 
         String result = "";
         switch (id) {
-            case R.id.menu_slideUp_nav:
-                result = "Slide UP Nav";
-                mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-                break;
             case R.id.title_sort:
                 result = "Title Sort";
                 toggleMenuItems(item);
@@ -142,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             default:
                 result = "Found no item";
+                result = item.getItemId() + " : " + item.toString();
                 break;
         }
 
