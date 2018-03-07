@@ -1,23 +1,14 @@
-package com.peterford.simplenotetaker;
+package com.peterford.simplenotetaker.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.peterford.simplenotetaker.R;
 import com.peterford.simplenotetaker.model.Note;
 
 import java.util.ArrayList;

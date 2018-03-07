@@ -1,20 +1,17 @@
-package com.peterford.simplenotetaker;
+package com.peterford.simplenotetaker.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.support.v7.widget.Toolbar;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.peterford.simplenotetaker.R;
 import com.peterford.simplenotetaker.model.Note;
 
 import java.io.FileNotFoundException;

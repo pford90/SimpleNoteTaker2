@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:sothree="http://schemas.android.com/apk/res-auto"
-    tools:context="com.peterford.simplenotetaker.MainActivity"
+    tools:context="com.peterford.simplenotetaker.activity.MainActivity"
     android:id="@+id/main_slidingPanel"
     android:layout_width="match_parent"
     android:layout_height="match_parent"

@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
-import com.peterford.simplenotetaker.NoteActivity;
+import com.peterford.simplenotetaker.activity.NoteActivity;
 import com.peterford.simplenotetaker.model.Note;
 
 import java.util.ArrayList;

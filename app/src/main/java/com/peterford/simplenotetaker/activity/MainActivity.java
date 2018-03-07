@@ -1,10 +1,9 @@
-package com.peterford.simplenotetaker;
+package com.peterford.simplenotetaker.activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,9 +15,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.peterford.simplenotetaker.adapter.NoteAdapter;
+import com.peterford.simplenotetaker.R;
 import com.peterford.simplenotetaker.comparators.NoteCreatedDateDescComparator;
 import com.peterford.simplenotetaker.comparators.NoteTitleDescComparator;
-import com.peterford.simplenotetaker.decoration.VerticalSpacingDecoration;
 import com.peterford.simplenotetaker.listener.*;
 import com.peterford.simplenotetaker.listener.RecyclerViewTouchListener;
 import com.peterford.simplenotetaker.model.Note;
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                         Note note = (Note) object;
                         if(mDeleteItemsFlag) {
                             if( view.getTag() == null || view.getTag() != Selected.YES ) {
-                                view.setBackgroundColor(Color.BLUE);
+                                view.setBackgroundColor(getColor(R.color.colorAccent));
                                 view.setTag(Selected.YES);
                                 mDeleteNotes.add(note);
                             } else {
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onItemLongClick(View view, int position, Object object) {
                         Note note = (Note) object;
-                        view.setBackgroundColor(Color.BLUE);
+                        view.setBackgroundColor(getColor(R.color.colorAccent));
                         view.setTag(Selected.YES);
                         mDeleteNotes.add(note);
                         mDeleteItemsFlag = true;
@@ -117,8 +117,9 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mNoteAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        mRecyclerView.addItemDecoration( new com.peterford.simplenotetaker.decoration.DividerItemDecoration(this));
-        mRecyclerView.addItemDecoration( new VerticalSpacingDecoration(24));
+        Drawable dividerDrawable = getDrawable(R.drawable.divider);
+        mRecyclerView.addItemDecoration( new com.peterford.simplenotetaker.decoration.DividerItemDecoration(dividerDrawable));
+//        mRecyclerView.addItemDecoration( new VerticalSpacingDecoration(0));
 
         mSlidingUpPanelLayout.setEnabled(true);
         mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
