@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,11 +36,18 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    private enum Selected { YES, NO };
+
     @BindView(R.id.main_toolbar) Toolbar mToolbar;
     @BindView(R.id.main_recyclerView_notes) RecyclerView mRecyclerView;
-
     @BindView(R.id.main_slidingPanel) SlidingUpPanelLayout mSlidingUpPanelLayout;
+
     private ArrayList<Note> mNotes;
+    private ArrayList<Note> mDeleteNotes;
+    private boolean mDeleteItemsFlag = false;
+
+    NoteAdapter mNoteAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,47 +69,52 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
         loadNotes();
+
+        mDeleteNotes = new ArrayList<>();
+
+        mNoteAdapter = new NoteAdapter(this, mNotes);
 
         mRecyclerView.addOnItemTouchListener( new RecyclerViewTouchListener(this, mRecyclerView, mSlidingUpPanelLayout, new RecyclerViewTouchListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position, Object object) {
                         Note note = (Note) object;
-                        // Go to Note Activity
-                        Intent intent = new Intent(view.getContext(), NoteActivity.class);
-                        intent.putExtra("note", note);
-                        view.getContext().startActivity(intent);
+                        if(mDeleteItemsFlag) {
+                            if( view.getTag() == null || view.getTag() != Selected.YES ) {
+                                view.setBackgroundColor(Color.BLUE);
+                                view.setTag(Selected.YES);
+                                mDeleteNotes.add(note);
+                            } else {
+                                view.setTag(null);
+                                mDeleteNotes.remove(note);
+                                view.setBackgroundColor(Color.WHITE);
+                                if( mDeleteNotes.size() == 0 ) {
+                                    mDeleteItemsFlag = false;
+                                    invalidateOptionsMenu();
+                                }
+                            }
+                        } else {
+                            // Go to Note Activity
+                            Intent intent = new Intent(view.getContext(), NoteActivity.class);
+                            intent.putExtra("note", note);
+                            view.getContext().startActivity(intent);
+                        }
                     }
 
                     @Override
                     public void onItemLongClick(View view, int position, Object object) {
                         Note note = (Note) object;
-
-                        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(view.getContext());
-                        dialogBuilder.setMessage("Are you sure you want to Delete?");
-                        dialogBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                deleteNote(position);
-                            }
-                        });
-                        dialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        });
-                        AlertDialog dialog = dialogBuilder.create();
-                        dialog.show();
-
+                        view.setBackgroundColor(Color.BLUE);
+                        view.setTag(Selected.YES);
+                        mDeleteNotes.add(note);
+                        mDeleteItemsFlag = true;
+                        invalidateOptionsMenu();
                     }
                 }, mNotes ) );
 
 
-        NoteAdapter adapter = new NoteAdapter(this, mNotes);
-        mRecyclerView.setAdapter(adapter);
+
+        mRecyclerView.setAdapter(mNoteAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mRecyclerView.addItemDecoration( new com.peterford.simplenotetaker.decoration.DividerItemDecoration(this));
@@ -147,6 +160,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, NoteActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.menu_delete:
+                result = "DELETE ITEMS " + mDeleteNotes.size();
+                deleteNotes();
+                break;
             default:
                 result = "Found no item";
                 result = item.getItemId() + " : " + item.toString();
@@ -154,6 +171,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+        return true;
+    }
+/* */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
+        MenuItem deleteMenuItem = menu.findItem(R.id.menu_delete);
+        if(mDeleteItemsFlag) {
+            searchMenuItem.setVisible(false);
+            deleteMenuItem.setVisible(true);
+        } else {
+            searchMenuItem.setVisible(true);
+            deleteMenuItem.setVisible(false);
+        }
         return true;
     }
 
@@ -188,6 +221,19 @@ public class MainActivity extends AppCompatActivity {
             note = null;
         }
         return note;
+    }
+
+
+    private void deleteNotes() {
+        for( Note note : mDeleteNotes ) {
+            deleteFile(note.getDateTime() + getResources().getString(R.string.preferences));
+            mNotes.remove(note);
+        }
+        mDeleteNotes.clear();
+        mNoteAdapter.notifyDataSetChanged();
+        mDeleteItemsFlag = false;
+        invalidateOptionsMenu();
+
     }
 
     private void deleteNote(int position) {
