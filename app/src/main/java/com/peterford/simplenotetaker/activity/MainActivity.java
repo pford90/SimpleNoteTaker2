@@ -63,48 +63,56 @@ public class MainActivity extends AppCompatActivity {
 
         mDeleteNotes = new ArrayList<>();
 
+        setupRecyclerView();
+
+        setupSlidingUpPanel();
+    }
+
+    private void setupSlidingUpPanel() {
+        mSlidingUpPanelLayout.setEnabled(true);
+        mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        mSlidingUpPanelLayout.addPanelSlideListener( new MainSlidePanelListener());
+    }
+
+    private void setupRecyclerView() {
         mNoteAdapter = new NoteAdapter(this, mNotes);
 
         mRecyclerView.addOnItemTouchListener( new RecyclerViewTouchListener(this, mRecyclerView, mSlidingUpPanelLayout, new RecyclerViewTouchListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position, Object object) {
-                        Note note = (Note) object;
-                        if(mDeleteItemsFlag) {
-                            if( view.getTag() == null || view.getTag() != Selected.YES ) {
-                                view.setBackgroundColor(getColor(R.color.colorAccent));
-                                view.setTag(Selected.YES);
-                                mDeleteNotes.add(note);
-                            } else {
-                                view.setTag(null);
-                                mDeleteNotes.remove(note);
-                                view.setBackgroundColor(Color.WHITE);
-                                if( mDeleteNotes.size() == 0 ) {
-                                    mDeleteItemsFlag = false;
-                                    invalidateOptionsMenu();
-                                }
-                            }
-                        } else {
-                            // Go to Note Activity
-                            Intent intent = new Intent(view.getContext(), NoteActivity.class);
-                            intent.putExtra("note", note);
-                            view.getContext().startActivity(intent);
-                        }
-                    }
-
-                    @Override
-                    public void onItemLongClick(View view, int position, Object object) {
-                        Note note = (Note) object;
+            @Override
+            public void onItemClick(View view, int position, Object object) {
+                Note note = (Note) object;
+                if(mDeleteItemsFlag) {
+                    if( view.getTag() == null || view.getTag() != Selected.YES ) {
                         view.setBackgroundColor(getColor(R.color.colorAccent));
                         view.setTag(Selected.YES);
                         mDeleteNotes.add(note);
-                        mDeleteItemsFlag = true;
-
-
-                        invalidateOptionsMenu();
+                    } else {
+                        view.setTag(null);
+                        mDeleteNotes.remove(note);
+                        view.setBackgroundColor(Color.WHITE);
+                        if( mDeleteNotes.size() == 0 ) {
+                            mDeleteItemsFlag = false;
+                            invalidateOptionsMenu();
+                        }
                     }
-                }, mNotes ) );
+                } else {
+                    // Go to Note Activity
+                    Intent intent = new Intent(view.getContext(), NoteActivity.class);
+                    intent.putExtra("note", note);
+                    view.getContext().startActivity(intent);
+                }
+            }
 
-
+            @Override
+            public void onItemLongClick(View view, int position, Object object) {
+                Note note = (Note) object;
+                view.setBackgroundColor(getColor(R.color.colorAccent));
+                view.setTag(Selected.YES);
+                mDeleteNotes.add(note);
+                mDeleteItemsFlag = true;
+                invalidateOptionsMenu();
+            }
+        }, mNotes ) );
 
         mRecyclerView.setAdapter(mNoteAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -112,10 +120,6 @@ public class MainActivity extends AppCompatActivity {
         Drawable dividerDrawable = getDrawable(R.drawable.divider);
         mRecyclerView.addItemDecoration( new com.peterford.simplenotetaker.decoration.DividerItemDecoration(dividerDrawable));
 //        mRecyclerView.addItemDecoration( new VerticalSpacingDecoration(0));
-
-        mSlidingUpPanelLayout.setEnabled(true);
-        mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-        mSlidingUpPanelLayout.addPanelSlideListener( new MainSlidePanelListener());
     }
 
     private void setUpActionBar() {
