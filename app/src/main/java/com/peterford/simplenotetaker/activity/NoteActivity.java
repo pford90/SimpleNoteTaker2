@@ -58,20 +58,21 @@ public class NoteActivity extends AppCompatActivity implements Toolbar.OnMenuIte
 
     @OnClick(R.id.note_save)
     public void saveNote(View view) {
-//        view.setBackgroundColor(Color.WHITE);
+
         Note note = null;
         if( mNote == null) {
            note = new Note(mNoteTitle.getText().toString(), mNoteContent.getText().toString(), new Date().getTime());
         } else {
+            mNote.setModifiedDate( new Date().getTime());
             note = mNote;
         }
 
-        Log.v("NOTEACTIVITY", note.getDateTimeString());
+        Log.v("NOTEACTIVITY", note.getDateTimeString(note.getModifiedDate()));
 
         /* */
         FileOutputStream fos = null;
         try {
-            String fileName = String.valueOf(note.getDateTime()) + PREF_FILE;
+            String fileName = String.valueOf(note.getCreatedDate()) + PREF_FILE;
             fos = this.openFileOutput(fileName, Context.MODE_PRIVATE);
 
             ObjectOutputStream os = new ObjectOutputStream(fos);
@@ -79,8 +80,6 @@ public class NoteActivity extends AppCompatActivity implements Toolbar.OnMenuIte
             os.close();
             fos.close();
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

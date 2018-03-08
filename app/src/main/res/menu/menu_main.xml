@@ -15,8 +15,10 @@
         <menu>
             <group android:id="@+id/menu_sort_group" android:checkableBehavior="single">
                 <item android:id="@+id/title_sort" android:title="@string/title"/>
-                <item android:id="@+id/modified_date_asc" android:title="@string/modified_date_oldest_first" />
-                <item android:id="@+id/modified_date_desc" android:title="@string/modified_date_newest_first"  />
+                <item android:id="@+id/modified_date_asc" android:title="@string/modified_date_newest_first" />
+                <item android:id="@+id/modified_date_desc" android:title="@string/modified_date_oldest_first"  />
+                <item android:id="@+id/created_date_asc" android:title="@string/created_date_newest_first" />
+                <item android:id="@+id/created_date_desc" android:title="@string/created_date_oldest_first"  />
             </group>
         </menu>
     </item>

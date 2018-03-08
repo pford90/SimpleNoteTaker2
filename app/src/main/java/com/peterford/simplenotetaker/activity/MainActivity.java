@@ -13,11 +13,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.peterford.simplenotetaker.adapter.NoteAdapter;
 import com.peterford.simplenotetaker.R;
-import com.peterford.simplenotetaker.comparators.NoteCreatedDateDescComparator;
+import com.peterford.simplenotetaker.comparators.NoteDateComparator;
 import com.peterford.simplenotetaker.comparators.NoteTitleDescComparator;
 import com.peterford.simplenotetaker.listener.*;
 import com.peterford.simplenotetaker.listener.RecyclerViewTouchListener;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.main_toolbar) Toolbar mToolbar;
     @BindView(R.id.main_recyclerView_notes) RecyclerView mRecyclerView;
     @BindView(R.id.main_slidingPanel) SlidingUpPanelLayout mSlidingUpPanelLayout;
+    @BindView(R.id.delete_counter) TextView mDeleteCounter;
 
     private ArrayList<Note> mNotes;
     private ArrayList<Note> mDeleteNotes;
@@ -55,19 +57,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        setSupportActionBar(mToolbar);
-        mToolbar.setNavigationIcon(R.drawable.ic_nav);
-
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if( mSlidingUpPanelLayout.getPanelState() != SlidingUpPanelLayout.PanelState.EXPANDED)
-                    mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-                else {
-                    mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-                }
-            }
-        });
+        setUpActionBar();
 
         loadNotes();
 
@@ -108,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
                         view.setTag(Selected.YES);
                         mDeleteNotes.add(note);
                         mDeleteItemsFlag = true;
+
+
                         invalidateOptionsMenu();
                     }
                 }, mNotes ) );
@@ -126,6 +118,50 @@ public class MainActivity extends AppCompatActivity {
         mSlidingUpPanelLayout.addPanelSlideListener( new MainSlidePanelListener());
     }
 
+    private void setUpActionBar() {
+
+        setSupportActionBar(mToolbar);
+
+        if( mDeleteItemsFlag ) {
+
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            mToolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mDeleteNotes.clear();
+
+                    for( int i = 0; i < mNoteAdapter.getItemCount(); i++ ) {
+                        if( mRecyclerView.getChildAt(i).getTag() == Selected.YES ) {
+                            mRecyclerView.getChildAt(i).setBackgroundColor(Color.WHITE);
+                            mRecyclerView.getChildAt(i).setTag(null);
+                        }
+                    }
+                    mDeleteItemsFlag = false;
+                }
+            });
+
+            mDeleteCounter.setText( String.valueOf(mDeleteNotes.size() ) );
+            mDeleteCounter.setVisibility(View.VISIBLE);
+        } else {
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            mToolbar.setTitle(getString(R.string.all_notes));
+            mDeleteCounter.setVisibility(View.INVISIBLE);
+            mToolbar.setNavigationIcon(R.drawable.ic_nav);
+
+            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mSlidingUpPanelLayout.getPanelState() != SlidingUpPanelLayout.PanelState.EXPANDED)
+                        mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                    else {
+                        mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                    }
+                }
+            });
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -140,20 +176,27 @@ public class MainActivity extends AppCompatActivity {
         switch (id) {
             case R.id.title_sort:
                 result = "Title Sort";
-                toggleMenuItems(item);
                 mNotes.sort(new NoteTitleDescComparator());
                 mRecyclerView.getAdapter().notifyDataSetChanged();
                 break;
             case R.id.modified_date_asc:
                 result = "Modified Date";
-                toggleMenuItems(item);
-                mNotes.sort(new NoteCreatedDateDescComparator(NoteCreatedDateDescComparator.SortType.ASC));
+                mNotes.sort(new NoteDateComparator(NoteDateComparator.SortType.MODIFIED_ASC));
                 mRecyclerView.getAdapter().notifyDataSetChanged();
                 break;
             case R.id.modified_date_desc:
                 result = "Modified Date";
-                toggleMenuItems(item);
-                mNotes.sort(new NoteCreatedDateDescComparator(NoteCreatedDateDescComparator.SortType.DESC));
+                mNotes.sort(new NoteDateComparator(NoteDateComparator.SortType.MODIFIED_DESC));
+                mRecyclerView.getAdapter().notifyDataSetChanged();
+                break;
+            case R.id.created_date_asc:
+                result = "Created Date";
+                mNotes.sort(new NoteDateComparator(NoteDateComparator.SortType.CREATED_ASC));
+                mRecyclerView.getAdapter().notifyDataSetChanged();
+                break;
+            case R.id.created_date_desc:
+                result = "Created Date";
+                mNotes.sort(new NoteDateComparator(NoteDateComparator.SortType.CREATED_DESC));
                 mRecyclerView.getAdapter().notifyDataSetChanged();
                 break;
             case R.id.menu_add:
@@ -166,7 +209,6 @@ public class MainActivity extends AppCompatActivity {
                 deleteNotes();
                 break;
             default:
-                result = "Found no item";
                 result = item.getItemId() + " : " + item.toString();
                 break;
         }
@@ -178,6 +220,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
+
+        setUpActionBar();
 
         MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
         MenuItem deleteMenuItem = menu.findItem(R.id.menu_delete);
@@ -191,9 +235,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void toggleMenuItems(MenuItem item) {
-        item.setChecked(!item.isChecked());
-    }
 
     private void loadNotes() {
         ArrayList<Note> notes_l = new ArrayList<>();
@@ -227,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void deleteNotes() {
         for( Note note : mDeleteNotes ) {
-            deleteFile(note.getDateTime() + getResources().getString(R.string.preferences));
+            deleteFile(note.getCreatedDate() + getResources().getString(R.string.preferences));
             mNotes.remove(note);
         }
         mDeleteNotes.clear();
@@ -239,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void deleteNote(int position) {
 
-        if( deleteFile(mNotes.get(position).getDateTime() + getResources().getString(R.string.preferences)) ) {
+        if( deleteFile(mNotes.get(position).getCreatedDate() + getResources().getString(R.string.preferences)) ) {
             Log.v(TAG, "DELETED THIS NOTE");
             mNotes.remove(position);
             mRecyclerView.getAdapter().notifyDataSetChanged();

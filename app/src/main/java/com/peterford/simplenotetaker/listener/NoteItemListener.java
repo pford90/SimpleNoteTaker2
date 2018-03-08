@@ -26,7 +26,6 @@ public class NoteItemListener implements RecyclerViewTouchListener.OnItemClickLi
     @Override
     public void onItemClick(View view, int position, Object object) {
         Note note = (Note) object;
-        Log.i("MY RECYCLERVIEW", "PRESSED : " + note.getDateTimeString());
 
         // Go to Note Activity
         Intent intent = new Intent(view.getContext(), NoteActivity.class);
@@ -45,7 +44,7 @@ public class NoteItemListener implements RecyclerViewTouchListener.OnItemClickLi
             public void onClick(DialogInterface dialogInterface, int i) {
                 Context context = dialogBuilder.getContext();
 
-                if( context.deleteFile(note.getDateTime() + ".preferences") ) {
+                if( context.deleteFile(note.getCreatedDate() + ".preferences") ) {
                     Log.v(TAG, "DELETED THIS NOTE");
                     mNotes.remove(position);
                     mRecyclerView.getAdapter().notifyDataSetChanged();

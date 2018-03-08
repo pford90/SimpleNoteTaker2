@@ -1,8 +1,5 @@
 package com.peterford.simplenotetaker.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,12 +7,15 @@ import java.util.Date;
 public class Note implements Serializable {
     private String mTitle;
     private String mContent;
-    private long mDateTime;
+    private long mCreatedDate;
+    private long mModifiedDate;
+
 
     public Note(String title, String content, long dateTime) {
         mTitle = title;
         mContent = content;
-        mDateTime = dateTime;
+        mCreatedDate = dateTime;
+        mModifiedDate = mCreatedDate;
     }
 
     public String getTitle() {
@@ -34,20 +34,26 @@ public class Note implements Serializable {
         mContent = content;
     }
 
-    public long getDateTime() {
-        return mDateTime;
+    public long getCreatedDate() {
+        return mCreatedDate;
     }
 
-    public void setDateTime(long dateTime) {
-        mDateTime = dateTime;
+    public void setCreatedDate(long createdDate) {
+        mCreatedDate = createdDate;
     }
 
-    public String getDateTimeString() {
+    public String getDateTimeString(long dateTime) {
         SimpleDateFormat format = new SimpleDateFormat("dd MMMM YYYY hh:mm");
 
 
-        return format.format(new Date(mDateTime));
+        return format.format(new Date(dateTime));
     }
 
+    public long getModifiedDate() {
+        return mModifiedDate;
+    }
 
+    public void setModifiedDate(long modifiedDate) {
+        mModifiedDate = modifiedDate;
+    }
 }

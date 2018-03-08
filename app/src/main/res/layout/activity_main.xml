@@ -27,6 +27,15 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
             android:theme="@style/ToolbarTheme">
+
+            <TextView
+                android:id="@+id/delete_counter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:textSize="24sp"
+                android:text="10"/>
+
         </android.support.v7.widget.Toolbar>
 
         <android.support.v7.widget.RecyclerView
