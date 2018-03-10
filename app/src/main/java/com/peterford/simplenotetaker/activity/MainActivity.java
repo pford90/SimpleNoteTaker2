@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        setUpActionBar();
+//        setUpActionBar();
 
         MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
         MenuItem deleteMenuItem = menu.findItem(R.id.menu_delete);
@@ -273,10 +273,14 @@ public class MainActivity extends AppCompatActivity {
     private void deleteNotes() {
         for( Note note : mDeleteNotes ) {
             deleteFile(note.getCreatedDate() + getResources().getString(R.string.preferences));
-            mNotes.remove(note);
+            mNoteAdapter.deleteNote(note);
         }
+
+
         mDeleteNotes.clear();
-        mNoteAdapter.notifyDataSetChanged();
+
+//        mNoteAdapter.notifyDataSetChanged();
+
         mDeleteItemsFlag = false;
         invalidateOptionsMenu();
 

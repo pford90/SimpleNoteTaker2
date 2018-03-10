@@ -53,6 +53,12 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         return mNotes.size();
     }
 
+    public void deleteNote(Note note) {
+        int position = mNotes.indexOf(note);
+        mNotes.remove(position);
+        notifyItemRemoved(position);
+    }
+
 
 
     public class NoteViewHolder extends RecyclerView.ViewHolder {
