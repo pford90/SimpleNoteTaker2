@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        setSupportActionBar(mToolbar);
+
         setUpActionBar();
 
         loadNotes();
@@ -123,8 +125,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpActionBar() {
-
-        setSupportActionBar(mToolbar);
 
         if( mDeleteItemsFlag ) {
 
@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-//        setUpActionBar();
+        setUpActionBar();
 
         MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
         MenuItem deleteMenuItem = menu.findItem(R.id.menu_delete);
