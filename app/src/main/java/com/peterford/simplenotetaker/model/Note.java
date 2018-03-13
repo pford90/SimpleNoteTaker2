@@ -43,7 +43,7 @@ public class Note implements Serializable {
     }
 
     public String getDateTimeString(long dateTime) {
-        SimpleDateFormat format = new SimpleDateFormat("dd MMMM YYYY hh:mm");
+        SimpleDateFormat format = new SimpleDateFormat("dd MMM hh:mm a");
 
 
         return format.format(new Date(dateTime));

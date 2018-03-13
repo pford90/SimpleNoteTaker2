@@ -65,6 +65,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
 
         @BindView(R.id.note_title) TextView mNoteTitle;
         @BindView(R.id.note_content) TextView mNoteContent;
+        @BindView(R.id.note_dateTime_display) TextView mNoteDateTimeDisplay;
 
         public NoteViewHolder(final View itemView) {
             super(itemView);
@@ -74,6 +75,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         public void bindNote(Note note) {
             mNoteTitle.setText( note.getTitle() );
             mNoteContent.setText( note.getContent() );
+
+            mNoteDateTimeDisplay.setText( note.getDateTimeString(note.getModifiedDate()) );
 
         }
     }
