@@ -69,19 +69,22 @@ public class NoteActivity extends AppCompatActivity implements Toolbar.OnMenuIte
 
         Log.v("NOTEACTIVITY", note.getDateTimeString(note.getModifiedDate()));
 
-        /* */
-        FileOutputStream fos = null;
-        try {
-            String fileName = String.valueOf(note.getCreatedDate()) + PREF_FILE;
-            fos = this.openFileOutput(fileName, Context.MODE_PRIVATE);
 
-            ObjectOutputStream os = new ObjectOutputStream(fos);
-            os.writeObject(note);
-            os.close();
-            fos.close();
+        if( note.getContent() != null && note.getContent().length() > 0) {
+            FileOutputStream fos = null;
+            try {
+                String fileName = String.valueOf(note.getCreatedDate()) + PREF_FILE;
+                fos = this.openFileOutput(fileName, Context.MODE_PRIVATE);
 
-        } catch (IOException e) {
-            e.printStackTrace();
+                ObjectOutputStream os = new ObjectOutputStream(fos);
+                os.writeObject(note);
+                os.close();
+                fos.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
 
         Intent intent = new Intent(this, MainActivity.class);
