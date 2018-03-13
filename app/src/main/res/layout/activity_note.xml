@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.peterford.simplenotetaker.activity.NoteActivity">
+
+
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/note_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ToolbarTheme">
+
+        <ImageButton
+            android:id="@+id/note_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_on_click"
+            android:longClickable="true"
+            android:src="@drawable/ic_check_24dp"/>
+
+        <ImageButton
+            android:id="@+id/note_undo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/button_on_click"
+            android:longClickable="true"
+            android:src="@drawable/ic_undo_24dp" />
+
+        <ImageButton
+            android:id="@+id/note_redo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/note_undo"
+            android:background="@drawable/button_on_click"
+            android:longClickable="true"
+            android:src="@drawable/ic_redo_24dp"
+            />
+
+    </android.support.v7.widget.Toolbar>
+
+
+    <LinearLayout
+        android:layout_below="@+id/note_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/note_note_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/note_note_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top|left" />
+    </LinearLayout>
+</RelativeLayout>

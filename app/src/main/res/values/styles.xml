@@ -11,6 +11,14 @@
 
     <style name="ToolbarTheme" parent="Base.ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:windowNoTitle">true</item>
+        <item name="android:title">All Notes</item>
+        <item name="popupTheme">@style/PopUpTheme</item>
+    </style>
+
+    <style name="PopUpTheme" parent="Theme.AppCompat.Light">
+        <item name="android:background">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="overlapAnchor">false</item>
     </style>
     
 </resources>
