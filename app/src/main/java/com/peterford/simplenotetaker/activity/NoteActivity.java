@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.peterford.simplenotetaker.R;
 import com.peterford.simplenotetaker.model.Note;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -27,6 +26,7 @@ import butterknife.OnClick;
 public class NoteActivity extends AppCompatActivity implements Toolbar.OnMenuItemClickListener {
 
     private static final String PREF_FILE = ".preferences";
+    private static final String TAG = NoteActivity.class.getSimpleName();
 
     @BindView(R.id.note_note_title)     EditText mNoteTitle;
     @BindView(R.id.note_note_content)   EditText mNoteContent;
@@ -63,6 +63,8 @@ public class NoteActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         if( mNote == null) {
            note = new Note(mNoteTitle.getText().toString(), mNoteContent.getText().toString(), new Date().getTime());
         } else {
+            mNote.setTitle(mNoteTitle.getText().toString());
+            mNote.setContent(mNoteContent.getText().toString());
             mNote.setModifiedDate( new Date().getTime());
             note = mNote;
         }
@@ -75,9 +77,9 @@ public class NoteActivity extends AppCompatActivity implements Toolbar.OnMenuIte
             try {
                 String fileName = String.valueOf(note.getCreatedDate()) + PREF_FILE;
                 fos = this.openFileOutput(fileName, Context.MODE_PRIVATE);
-
                 ObjectOutputStream os = new ObjectOutputStream(fos);
                 os.writeObject(note);
+                os.flush();
                 os.close();
                 fos.close();
 

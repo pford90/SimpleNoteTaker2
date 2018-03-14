@@ -3,6 +3,7 @@ package com.peterford.simplenotetaker.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,12 +60,15 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         notifyItemRemoved(position);
     }
 
-
+    public void setNotes(ArrayList<Note> notes) {
+        mNotes = notes;
+    }
 
     public class NoteViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.note_title) TextView mNoteTitle;
         @BindView(R.id.note_content) TextView mNoteContent;
+        @BindView(R.id.note_dateTime_display) TextView mNoteDateTimeDisplay;
 
         public NoteViewHolder(final View itemView) {
             super(itemView);
@@ -74,6 +78,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
         public void bindNote(Note note) {
             mNoteTitle.setText( note.getTitle() );
             mNoteContent.setText( note.getContent() );
+            mNoteDateTimeDisplay.setText( note.getDateTimeString(note.getModifiedDate()) );
 
         }
     }

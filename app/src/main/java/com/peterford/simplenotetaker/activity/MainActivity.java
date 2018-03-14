@@ -241,16 +241,20 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void loadNotes() {
-        ArrayList<Note> notes_l = new ArrayList<>();
+        if( mNotes == null ) {
+            mNotes = new ArrayList<>();
+        } else {
+            mNotes.clear();
+        }
+
         for(String fileName : fileList()) {
             if( fileName.endsWith(getString(R.string.preferences)) ) {
                 Note note = readNote(fileName);
                 if( note != null ) {
-                    notes_l.add(note);
+                    mNotes.add(note);
                 }
             }
         }
-        mNotes = notes_l;
     }
 
     private Note readNote(String fileName) {
@@ -264,6 +268,7 @@ public class MainActivity extends AppCompatActivity {
             fis.close();
 
         } catch ( IOException|ClassNotFoundException e ) {
+            deleteFile(fileName);
             note = null;
         }
         return note;
