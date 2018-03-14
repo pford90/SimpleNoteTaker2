@@ -1,5 +1,7 @@
 package com.peterford.simplenotetaker.activity;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 
 import android.graphics.Color;
@@ -8,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -57,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        handleIntent(getIntent());
+
         setSupportActionBar(mToolbar);
 
         setUpActionBar();
@@ -68,6 +73,13 @@ public class MainActivity extends AppCompatActivity {
         setupRecyclerView();
 
         setupSlidingUpPanel();
+    }
+
+    private void handleIntent(Intent intent) {
+
+        if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            Toast.makeText(this, "INSIDE SEARCH ACTION", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setupSlidingUpPanel() {
@@ -169,6 +181,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        searchView.setSearchableInfo( searchManager.getSearchableInfo(getComponentName()));
         return true;
     }
 
@@ -213,11 +229,8 @@ public class MainActivity extends AppCompatActivity {
                 deleteNotes();
                 break;
             default:
-                result = item.getItemId() + " : " + item.toString();
                 break;
         }
-
-        Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
         return true;
     }
 /* */
