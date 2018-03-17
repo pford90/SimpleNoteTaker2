@@ -14,4 +14,5 @@
     <string name="created_date_oldest_first">Created Date( oldest first )</string>
     <string name="modified_date_newest_first">Modified Date ( newest first )</string>
     <string name="modified_date_oldest_first">Modified Date ( oldest first )</string>
+    <string name="search_hint">Search</string>
 </resources>

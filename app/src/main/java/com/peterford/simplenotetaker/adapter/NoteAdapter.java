@@ -22,6 +22,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     private static final String TAG = NoteAdapter.class.getSimpleName();
 
     private ArrayList<Note> mNotes;
+    private ArrayList<Note> mNotesCopy;
     private Context mContext;
     private boolean mCheckBoxFlag = false;
 
@@ -29,11 +30,29 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteViewHolder
     public NoteAdapter(Context context, ArrayList<Note> notes) {
         mContext = context;
         mNotes = notes;
+        mNotesCopy = new ArrayList<>();
+        mNotesCopy.addAll(mNotes);
     }
 
     public void toggleCheckBoxFlag(){
         mCheckBoxFlag = !mCheckBoxFlag;
     }
+
+    public void filterNotes(String text) {
+        mNotes.clear();
+        if(text.isEmpty()) {
+            mNotes.addAll(mNotesCopy);
+        } else {
+            text = text.toLowerCase();
+            for( Note note : mNotesCopy ) {
+                if( note.getContent().contains(text) || note.getTitle().contains(text)) {
+                    mNotes.add(note);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
 
     @SuppressLint("ResourceAsColor")
     @Override

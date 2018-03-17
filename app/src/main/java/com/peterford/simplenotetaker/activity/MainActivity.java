@@ -1,5 +1,7 @@
 package com.peterford.simplenotetaker.activity;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 
 import android.graphics.Color;
@@ -8,7 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,7 +37,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -68,6 +72,24 @@ public class MainActivity extends AppCompatActivity {
         setupRecyclerView();
 
         setupSlidingUpPanel();
+
+        handleIntent(getIntent());
+    }
+
+    private void handleIntent(Intent intent) {
+
+        if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            ArrayList<Note> foundNotes = new ArrayList<>();
+            int foundCnt = 0;
+            for( Note note : mNotes ) {
+
+                if( note.getTitle().contains(query) || note.getContent().contains(query) ) {
+                    foundNotes.add(note);
+                    foundCnt++;
+                }
+            }
+        }
     }
 
     private void setupSlidingUpPanel() {
@@ -169,6 +191,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        searchView.setSearchableInfo( searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(this);
         return true;
     }
 
@@ -213,11 +240,8 @@ public class MainActivity extends AppCompatActivity {
                 deleteNotes();
                 break;
             default:
-                result = item.getItemId() + " : " + item.toString();
                 break;
         }
-
-        Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
         return true;
     }
 /* */
@@ -284,23 +308,24 @@ public class MainActivity extends AppCompatActivity {
 
         mDeleteNotes.clear();
 
-//        mNoteAdapter.notifyDataSetChanged();
-
         mDeleteItemsFlag = false;
         invalidateOptionsMenu();
 
     }
 
-    private void deleteNote(int position) {
-
-        if( deleteFile(mNotes.get(position).getCreatedDate() + getResources().getString(R.string.preferences)) ) {
-            Log.v(TAG, "DELETED THIS NOTE");
-            mNotes.remove(position);
-            mRecyclerView.getAdapter().notifyDataSetChanged();
+    // SearchView.OnQueryTextListener
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        if(TextUtils.isEmpty(query)) {
         } else {
-            Log.v(TAG, "CANT FIND NOTE");
+            mNoteAdapter.filterNotes(query);
         }
-
+        return true;
     }
 
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        mNoteAdapter.filterNotes(newText);
+        return true;
+    }
 }
