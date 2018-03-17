@@ -89,9 +89,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     foundCnt++;
                 }
             }
-//            mNoteAdapter.setNotes(foundNotes);
-//            mNoteAdapter.notifyDataSetChanged();
-            Toast.makeText(this, "Found : " + foundCnt, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -311,24 +308,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         mDeleteNotes.clear();
 
-//        mNoteAdapter.notifyDataSetChanged();
-
         mDeleteItemsFlag = false;
         invalidateOptionsMenu();
 
     }
 
-    private void deleteNote(int position) {
-
-        if( deleteFile(mNotes.get(position).getCreatedDate() + getResources().getString(R.string.preferences)) ) {
-            Log.v(TAG, "DELETED THIS NOTE");
-            mNotes.remove(position);
-            mRecyclerView.getAdapter().notifyDataSetChanged();
-        } else {
-            Log.v(TAG, "CANT FIND NOTE");
-        }
-
-    }
     // SearchView.OnQueryTextListener
     @Override
     public boolean onQueryTextSubmit(String query) {
