@@ -60,8 +60,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        handleIntent(getIntent());
-
         setSupportActionBar(mToolbar);
 
         setUpActionBar();
@@ -73,12 +71,21 @@ public class MainActivity extends AppCompatActivity {
         setupRecyclerView();
 
         setupSlidingUpPanel();
+
+        handleIntent(getIntent());
     }
 
     private void handleIntent(Intent intent) {
 
         if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            Toast.makeText(this, "INSIDE SEARCH ACTION", Toast.LENGTH_SHORT).show();
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            int foundCnt = 0;
+            for( Note note : mNotes ) {
+                if( note.getTitle().contains(query) || note.getContent().contains(query) ) {
+                    foundCnt++;
+                }
+            }
+            Toast.makeText(this, "Found : " + foundCnt, Toast.LENGTH_SHORT).show();
         }
     }
 
