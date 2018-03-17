@@ -13,12 +13,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.peterford.simplenotetaker.adapter.NoteAdapter;
 import com.peterford.simplenotetaker.R;
@@ -73,23 +71,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         setupSlidingUpPanel();
 
-        handleIntent(getIntent());
-    }
-
-    private void handleIntent(Intent intent) {
-
-        if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            ArrayList<Note> foundNotes = new ArrayList<>();
-            int foundCnt = 0;
-            for( Note note : mNotes ) {
-
-                if( note.getTitle().contains(query) || note.getContent().contains(query) ) {
-                    foundNotes.add(note);
-                    foundCnt++;
-                }
-            }
-        }
     }
 
     private void setupSlidingUpPanel() {
@@ -194,8 +175,19 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+
         searchView.setSearchableInfo( searchManager.getSearchableInfo(getComponentName()));
         searchView.setOnQueryTextListener(this);
+
+        searchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
         return true;
     }
 
@@ -264,6 +256,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
 
+
     private void loadNotes() {
         if( mNotes == null ) {
             mNotes = new ArrayList<>();
@@ -313,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     }
 
-    // SearchView.OnQueryTextListener
+    //START SearchView.OnQueryTextListener
     @Override
     public boolean onQueryTextSubmit(String query) {
         if(TextUtils.isEmpty(query)) {
@@ -328,4 +321,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         mNoteAdapter.filterNotes(newText);
         return true;
     }
+    // END SearchView.OnQueryTextListener
+
 }
