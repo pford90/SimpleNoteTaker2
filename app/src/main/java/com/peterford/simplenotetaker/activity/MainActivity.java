@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -178,7 +179,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         searchView.setSearchableInfo( searchManager.getSearchableInfo(getComponentName()));
         searchView.setOnQueryTextListener(this);
-
         searchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -187,7 +187,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         startActivity(intent);
                     }
                 });
-
         return true;
     }
 
