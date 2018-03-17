@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,7 +37,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -79,12 +80,17 @@ public class MainActivity extends AppCompatActivity {
 
         if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
+            ArrayList<Note> foundNotes = new ArrayList<>();
             int foundCnt = 0;
             for( Note note : mNotes ) {
+
                 if( note.getTitle().contains(query) || note.getContent().contains(query) ) {
+                    foundNotes.add(note);
                     foundCnt++;
                 }
             }
+//            mNoteAdapter.setNotes(foundNotes);
+//            mNoteAdapter.notifyDataSetChanged();
             Toast.makeText(this, "Found : " + foundCnt, Toast.LENGTH_SHORT).show();
         }
     }
@@ -192,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
         SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
         searchView.setSearchableInfo( searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(this);
         return true;
     }
 
@@ -322,5 +329,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+    // SearchView.OnQueryTextListener
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        if(TextUtils.isEmpty(query)) {
+        } else {
+            mNoteAdapter.filterNotes(query);
+        }
+        return true;
+    }
 
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        mNoteAdapter.filterNotes(newText);
+        return true;
+    }
 }
