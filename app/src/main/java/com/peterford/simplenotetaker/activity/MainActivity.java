@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         view.setBackgroundColor(getColor(R.color.colorAccent));
                         view.setTag(Selected.YES);
                         mDeleteNotes.add(note);
+                        mDeleteCounter.setText(String.valueOf(mDeleteNotes.size()));
                     } else {
                         view.setTag(null);
                         mDeleteNotes.remove(note);
