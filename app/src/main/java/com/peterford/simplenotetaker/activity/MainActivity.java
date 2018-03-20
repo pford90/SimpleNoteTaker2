@@ -13,7 +13,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,6 +45,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @BindView(R.id.main_recyclerView_notes) RecyclerView mRecyclerView;
     @BindView(R.id.main_slidingPanel) SlidingUpPanelLayout mSlidingUpPanelLayout;
     @BindView(R.id.delete_counter) TextView mDeleteCounter;
+
+    MenuItem mSearchMenuItem;
+    MenuItem mDeleteMenuItem;
 
     private ArrayList<Note> mNotes;
     private ArrayList<Note> mDeleteNotes;
@@ -92,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         view.setBackgroundColor(getColor(R.color.colorAccent));
                         view.setTag(Selected.YES);
                         mDeleteNotes.add(note);
+                        mDeleteCounter.setText(String.valueOf(mDeleteNotes.size()));
                     } else {
                         view.setTag(null);
                         mDeleteNotes.remove(note);
@@ -125,7 +128,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         Drawable dividerDrawable = getDrawable(R.drawable.divider);
         mRecyclerView.addItemDecoration( new com.peterford.simplenotetaker.decoration.DividerItemDecoration(dividerDrawable));
-//        mRecyclerView.addItemDecoration( new VerticalSpacingDecoration(0));
     }
 
     private void setUpActionBar() {
@@ -146,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         }
                     }
                     mDeleteItemsFlag = false;
+                    invalidateOptionsMenu();
                 }
             });
 
@@ -157,14 +160,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             mDeleteCounter.setVisibility(View.INVISIBLE);
             mToolbar.setNavigationIcon(R.drawable.ic_nav);
 
-            mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mSlidingUpPanelLayout.getPanelState() != SlidingUpPanelLayout.PanelState.EXPANDED)
-                        mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-                    else {
-                        mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-                    }
+            mToolbar.setNavigationOnClickListener(view -> {
+                if (mSlidingUpPanelLayout.getPanelState() != SlidingUpPanelLayout.PanelState.EXPANDED)
+                    mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                else {
+                    mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                 }
             });
         }
@@ -175,17 +175,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
         SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-
+        mDeleteMenuItem = menu.findItem(R.id.menu_delete);
+        mSearchMenuItem = menu.findItem(R.id.menu_search);
+        SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
         searchView.setSearchableInfo( searchManager.getSearchableInfo(getComponentName()));
         searchView.setOnQueryTextListener(this);
         searchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);
-                    }
+                .setOnClickListener(view -> {
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
                 });
         return true;
     }
@@ -194,40 +192,32 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        String result = "";
         switch (id) {
             case R.id.title_sort:
-                result = "Title Sort";
                 mNotes.sort(new NoteTitleDescComparator());
                 mRecyclerView.getAdapter().notifyDataSetChanged();
                 break;
             case R.id.modified_date_asc:
-                result = "Modified Date";
                 mNotes.sort(new NoteDateComparator(NoteDateComparator.SortType.MODIFIED_ASC));
                 mRecyclerView.getAdapter().notifyDataSetChanged();
                 break;
             case R.id.modified_date_desc:
-                result = "Modified Date";
                 mNotes.sort(new NoteDateComparator(NoteDateComparator.SortType.MODIFIED_DESC));
                 mRecyclerView.getAdapter().notifyDataSetChanged();
                 break;
             case R.id.created_date_asc:
-                result = "Created Date";
                 mNotes.sort(new NoteDateComparator(NoteDateComparator.SortType.CREATED_ASC));
                 mRecyclerView.getAdapter().notifyDataSetChanged();
                 break;
             case R.id.created_date_desc:
-                result = "Created Date";
                 mNotes.sort(new NoteDateComparator(NoteDateComparator.SortType.CREATED_DESC));
                 mRecyclerView.getAdapter().notifyDataSetChanged();
                 break;
             case R.id.menu_add:
-                result = "Add";
                 Intent intent = new Intent(this, NoteActivity.class);
                 startActivity(intent);
                 break;
             case R.id.menu_delete:
-                result = "DELETE ITEMS " + mDeleteNotes.size();
                 deleteNotes();
                 break;
             default:
@@ -235,25 +225,27 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
         return true;
     }
-/* */
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
         setUpActionBar();
+        toggleDeleteActionBar();
 
-        MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
-        MenuItem deleteMenuItem = menu.findItem(R.id.menu_delete);
-        if(mDeleteItemsFlag) {
-            searchMenuItem.setVisible(false);
-            deleteMenuItem.setVisible(true);
-        } else {
-            searchMenuItem.setVisible(true);
-            deleteMenuItem.setVisible(false);
-        }
         return true;
     }
 
+    private void toggleDeleteActionBar() {
+        if(mDeleteItemsFlag) {
+            mSearchMenuItem.setVisible(false);
+            mDeleteMenuItem.setVisible(true);
+        } else {
+            mSearchMenuItem.setVisible(true);
+            mDeleteMenuItem.setVisible(false);
+            mDeleteCounter.setVisibility(View.GONE);
+        }
+    }
 
 
     private void loadNotes() {
@@ -274,8 +266,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     private Note readNote(String fileName) {
-        FileInputStream fis = null;
-        Note note = null;
+        FileInputStream fis;
+        Note note;
         try {
             fis = this.openFileInput(fileName);
             ObjectInputStream is = new ObjectInputStream(fis);
@@ -297,9 +289,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             mNoteAdapter.deleteNote(note);
         }
 
-
         mDeleteNotes.clear();
-
         mDeleteItemsFlag = false;
         invalidateOptionsMenu();
 
@@ -321,5 +311,4 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         return true;
     }
     // END SearchView.OnQueryTextListener
-
 }
